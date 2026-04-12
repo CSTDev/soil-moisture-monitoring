@@ -1,0 +1,13 @@
+pollIntervalSeconds: 10
+databaseFile: ./data/iot.db
+mqtt:
+  protocol: tls
+  broker: "" # broker address e.g. "mqtt.example.com"
+  port: 8883 # broker port
+  qos: 0
+  username: "" # broker username 
+  password: "" # broker password
+health:
+  namespace: Pi
+  appName: poller
+  heartBeatInterval: 3600
