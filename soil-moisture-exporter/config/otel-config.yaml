@@ -1,0 +1,38 @@
+---
+receivers:
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: "moisture_collector"
+          scrape_interval: 15s
+          static_configs:
+            - targets: ["soilconsumer:2112"]
+  hostmetrics:
+    scrapers:
+      load:
+      memory:
+
+extensions:
+  basicauth/client:
+    client_auth:
+      username: "" # Grafana Cloud username e.g. "1208224"
+      password: "" # Grafana Cloud API key
+  basicauth/grafana_cloud:
+    client_auth:
+      username: "" # Grafana Cloud username e.g. "1208224"
+      password: "" # Grafana Cloud API key
+exporters:
+  otlphttp/grafana_cloud:
+    endpoint: "" # Grafana Cloud OTLP endpoint e.g. "https://otlp-gateway-prod-us-central1.grafana.net/otel/v1/metrics"
+    auth:
+      authenticator: basicauth/grafana_cloud
+
+service:
+  extensions:
+    [
+      basicauth/grafana_cloud,
+    ]
+  pipelines:
+    metrics:
+      receivers: [prometheus, hostmetrics]
+      exporters: [otlphttp/grafana_cloud]
