@@ -1,0 +1,306 @@
+apiVersion: 1
+groups:
+    - orgId: 1
+      name: OneMinuteEvaluation
+      folder: pi-applications
+      interval: 1m
+      rules:
+        - uid: feh8kivfjj56oe
+          title: Component Liveness
+          condition: C
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 21600
+                to: 0
+              datasourceUid: grafanacloud-prom
+              model:
+                adhocFilters: []
+                datasource:
+                    type: prometheus
+                    uid: grafanacloud-prom
+                disableTextWrap: false
+                editorMode: builder
+                expr: up
+                fullMetaSearch: false
+                includeNullMetadata: true
+                instant: true
+                interval: ""
+                intervalMs: 60000
+                legendFormat: '{{instance}} - {{job}}'
+                maxDataPoints: 43200
+                range: false
+                refId: A
+                useBackend: false
+            - refId: C
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 0
+                        type: lte
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - C
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: C
+                type: threshold
+          dashboardUid: ceh8j8z45hvr4f
+          panelId: 1
+          noDataState: NoData
+          execErrState: Error
+          for: 1m
+          annotations:
+            __dashboardUid__: ceh8j8z45hvr4f
+            __panelId__: "1"
+            summary: Instance {{$labels.instance}} is down
+          labels:
+            service_name: soilconsumer
+          isPaused: false
+          notification_settings:
+            receiver: MySlackChannel
+        - uid: fehhrevoprv9ce
+          title: Soil Moisture
+          condition: C
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 169200
+                to: 0
+              datasourceUid: grafanacloud-prom
+              model:
+                adhocFilters: []
+                datasource:
+                    type: prometheus
+                    uid: grafanacloud-prom
+                disableTextWrap: false
+                editorMode: builder
+                exemplar: false
+                expr: moisture_percentage{job="moisture_collector"}
+                fullMetaSearch: false
+                includeNullMetadata: true
+                instant: false
+                interval: ""
+                intervalMs: 60000
+                legendFormat: '{{sensor}}'
+                maxDataPoints: 43200
+                range: true
+                refId: A
+                useBackend: false
+            - refId: B
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params: []
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - B
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                intervalMs: 1000
+                maxDataPoints: 43200
+                reducer: last
+                refId: B
+                type: reduce
+            - refId: C
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 40
+                        type: lt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - C
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: B
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: C
+                type: threshold
+          dashboardUid: ceh8j8z45hvr4f
+          panelId: 2
+          noDataState: NoData
+          execErrState: Error
+          for: 1m
+          annotations:
+            __dashboardUid__: ceh8j8z45hvr4f
+            __panelId__: "2"
+            summary: Plant requires watering - sensor {{ $labels.sensor}}
+          labels:
+            sensor: '{{ $$labels.sensor }}'
+            service_name: soilconsumer
+          isPaused: false
+          notification_settings:
+            receiver: MySlackChannel
+        - uid: aehlzb6qh3ta8a
+          title: Sensor Below Threshold
+          condition: C
+          data:
+            - refId: A
+              relativeTimeRange:
+                from: 86400
+                to: 0
+              datasourceUid: grafanacloud-prom
+              model:
+                adhocFilters: []
+                datasource:
+                    type: prometheus
+                    uid: grafanacloud-prom
+                disableTextWrap: false
+                editorMode: builder
+                exemplar: false
+                expr: moisture_below_threshold
+                fullMetaSearch: false
+                includeNullMetadata: true
+                instant: true
+                interval: ""
+                intervalMs: 60000
+                key: Q-dcc95eb1-291e-4aa8-b8a0-549454252dda-0
+                legendFormat: '{{sensor}}'
+                maxDataPoints: 43200
+                range: false
+                refId: A
+                useBackend: false
+            - refId: C
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 0
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - C
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: C
+                type: threshold
+          dashboardUid: ceh8j8z45hvr4f
+          panelId: 3
+          noDataState: NoData
+          execErrState: Error
+          annotations:
+            __dashboardUid__: ceh8j8z45hvr4f
+            __panelId__: "3"
+            summary: '{{ $labels.sensor }} is below threshold set.'
+          labels:
+            sensor: '{{ $$labels.sensor }}'
+            service_name: soilconsumer
+          isPaused: false
+          notification_settings:
+            receiver: MySlackChannel
+    - orgId: 1
+      name: SixHourly
+      folder: pi-applications
+      interval: 6h
+      rules:
+        - uid: cehlhae3oj11cf
+          title: Component Liveness - Sensors
+          condition: D
+          data:
+            - refId: B
+              relativeTimeRange:
+                from: 3600
+                to: 0
+              datasourceUid: grafanacloud-prom
+              model:
+                adhocFilters: []
+                datasource:
+                    type: prometheus
+                    uid: grafanacloud-prom
+                disableTextWrap: false
+                editorMode: builder
+                exemplar: false
+                expr: increase(reading_count_total[4h])
+                fullMetaSearch: false
+                includeNullMetadata: true
+                instant: true
+                interval: ""
+                intervalMs: 60000
+                legendFormat: '{{sensor}}'
+                maxDataPoints: 43200
+                range: false
+                refId: B
+                useBackend: false
+            - refId: D
+              datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 1
+                        type: lt
+                      operator:
+                        type: and
+                      query:
+                        params:
+                            - D
+                      reducer:
+                        params: []
+                        type: last
+                      type: query
+                datasource:
+                    type: __expr__
+                    uid: __expr__
+                expression: B
+                intervalMs: 1000
+                maxDataPoints: 43200
+                refId: D
+                type: threshold
+          dashboardUid: ceh8j8z45hvr4f
+          panelId: 1
+          noDataState: NoData
+          execErrState: Error
+          annotations:
+            __dashboardUid__: ceh8j8z45hvr4f
+            __panelId__: "1"
+            summary: Sensor {{ $labels.sensor }} not reporting metrics.
+          labels:
+            sensor: '{{ $$labels.sensor }}'
+            service_name: soilconsumer
+          isPaused: false
+          notification_settings:
+            receiver: MySlackChannel

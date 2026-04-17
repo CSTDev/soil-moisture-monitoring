@@ -6,7 +6,7 @@ receivers:
         - job_name: "moisture_collector"
           scrape_interval: 15s
           static_configs:
-            - targets: ["soilconsumer:2112"]
+            - targets: ["soilconsumer:2112"] # Hostname of the soil-moisture-exporter based on the docker compose service name 
   hostmetrics:
     scrapers:
       load:

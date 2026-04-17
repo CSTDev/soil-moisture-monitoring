@@ -1,0 +1,10 @@
+apiVersion: 1
+contactPoints:
+    - orgId: 1
+      name: MySlackChannel
+      receivers:
+        - uid: "" # Channel UID
+          type: slack
+          settings:
+            url: https://hooks.slack.com/services/<unique ID>
+          disableResolveMessage: false
